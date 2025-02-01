@@ -1,0 +1,9 @@
+ssh_user: adminuser
+ansible_sudo_pass: adminpass
+ssh_cert: ~/.ssh/id_ed25519
+ssh_port: "22"
+server_agent_1: "192.168.0.26"
+server_agent_2: "192.168.0.29"
+server_agent_3: "192.168.0.24"
+worker_agent_1: "192.168.0.27"
+hostname: "rancher-dev.branconet.lan"

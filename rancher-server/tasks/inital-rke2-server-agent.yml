@@ -1,0 +1,21 @@
+---
+- name: Download and install RKE2
+  shell: curl -sfL https://get.rke2.io | sh -
+
+- name: Enable RKE2 server service
+  systemd:
+    name: rke2-server
+    enabled: yes
+    state: started
+
+- name: Wait for RKE2 config file to be available
+  wait_for:
+    path: /etc/rancher/rke2/rke2.yaml
+    timeout: 60
+
+- name: Set read permissions for adminuser on RKE2 config file
+  file:
+    path: /etc/rancher/rke2/rke2.yaml
+    owner: root
+    group: '{{ssh_user}}'
+    mode: '0640'

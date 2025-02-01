@@ -1,0 +1,94 @@
+---
+- name: "Provision Enviorment"
+  vars_files:
+    - vars/vars.yml
+  strategy: linear
+  hosts: 
+   - rke2_server_agents
+   - rke2_worker_agents
+  become: true 
+  tasks:
+  - name: Debug VARS
+    include_tasks: 
+      file: tasks/debug.yml
+    tags: [always]
+  - name: Install Required Packages
+    include_tasks: 
+      file: tasks/provisioning.yml
+    tags: [packages]
+  - name: Setup SSH
+    include_tasks: 
+      file: tasks/ssh_setup.yml
+    tags: [ssh]
+  - name: Setup firewall
+    include_tasks: 
+      file: tasks/ufw.yml
+    tags: [ufw]
+
+
+- name: "Initial Rancher Server Deployment"
+  vars_files:
+    - vars/vars.yml
+  strategy: linear
+  hosts: server_agent_1
+  become: true 
+  tasks:
+  - name: Install Initial Server
+    include_tasks: 
+      file: tasks/inital-rke2-server-agent.yml
+    tags: [rke2_server_agents]
+
+
+- name: "Upstream Rancher Server Deployment"
+  vars_files:
+    - vars/vars.yml
+  strategy: linear
+  hosts: 
+    - server_agent_2
+    - server_agent_3
+  become: true 
+  tasks:
+  - name: Install HA Upstream Servers
+    include_tasks: 
+      file: tasks/ha-rke2-server-agents.yml
+    tags: [rke2_server_agents]
+
+
+- name: "Upstream Rancher Workers Deployment"
+  vars_files:
+    - vars/vars.yml
+  strategy: linear
+  hosts: rke2_worker_agents
+  become: true 
+  tasks:
+  - name: Install HA Upstream Workers
+    include_tasks: 
+      file: tasks/ha-rke2-worker-agents.yml
+    tags: [rke2_worker_agents]
+
+
+- name: "Install Rancher Dashboard"
+  vars_files:
+    - vars/vars.yml
+  strategy: linear
+  hosts: 
+    - server_agent_1
+  become: true 
+  tasks:
+  - name: Install Rancher Dashboard
+    include_tasks: 
+      file: tasks/ha-rke2-rancher-dashboard.yml
+    tags: [rke2_server_agents, rancher_dashboard]
+
+
+- name: "Upstream Rancher Server Roles"
+  vars_files:
+    - vars/vars.yml
+  strategy: linear
+  hosts: rke2_server_agents
+  become: true 
+  tasks:
+  - name: Set HA Roles
+    include_tasks: 
+      file: tasks/ha-rke2-rancher-roles.yml
+    tags: [rke2_server_agent,roles]

@@ -1,0 +1,8 @@
+- name: Promote all master nodes to all roles (etcd, control-plane, worker, master)
+  shell: |
+    export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
+    /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/etcd=true
+    /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/control-plane=true
+    /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/worker=true
+    /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/master=true
+  tags: [roles]

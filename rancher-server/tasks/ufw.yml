@@ -1,0 +1,62 @@
+- name: Enable UFW and deny all by default
+  ufw:
+    state: enabled
+    policy: allow
+  tags: ufw
+
+- name: Set logging
+  ufw:
+    logging: 'on'
+  tags: ufw
+
+- ufw:
+    rule: allow
+    name: OpenSSH
+  tags: ufw
+
+- name: Open HTTP/HTTPS ports
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+  with_items:
+    - '80' 
+    - '443'
+  tags: ufw
+   
+- name: Open Ports TCP
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+  with_items:
+    - '2379' 
+    - '2380'
+    - '2381'
+    - '6443'
+    - '9345'
+    - '10250'
+    - '8443' #Rancher UI
+  tags: ufw
+
+- name: Open Swarm Ports UDP
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: udp
+  with_items:
+    - '8472' 
+    - '9099'
+    - '51820'
+    - '51821' 
+    - '8443' #Rancher UI
+  tags: ufw
+
+
+# - name: Allow port range 8070-8090 (App Range)
+#   ufw:
+#     rule: allow
+#     port: 8079:8098
+#     proto: tcp
+#   tags: ufw
+
