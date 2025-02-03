@@ -49,15 +49,3 @@
       hostname: "{{ hostname }}"  # Set the Rancher hostname
   environment:
     KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
-
-
-# - name: Install Rancher via Helm
-#   shell: |
-#     export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
-#     helm install rancher rancher-stable/rancher \
-#       --namespace cattle-system \
-#       --create-namespace \
-#       --set hostname={{ hostname }} \
-#       --set bootstrapPassword=admin \
-#       --set ingress.tls.source=none \
-#   tags: [rancher_dashboard]
