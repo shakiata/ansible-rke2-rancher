@@ -8,6 +8,7 @@
     state: present  # Ensure repository is added
   environment:
     KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
+  when: self_signed_cert == false
 
 - name: Deploy Cert-Manager chart inside cert-manager namespace
   kubernetes.core.helm:
@@ -23,3 +24,4 @@
       installCRDs: true  # Additional values to install CRDs
   environment:
     KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
+  when: self_signed_cert == false
