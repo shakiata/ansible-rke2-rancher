@@ -6,7 +6,7 @@
 </h1>
 
 <div align="center">
-  <b>File Converter</b> - A versatile script to convert individual files or entire folders to the desired format.
+  <b>ansible-rke2-rancher</b> - Setup a RKE2 Cluster with Rancher UI in minutes.
   <br />
   <br />
   <a href="https://github.com/your-repo/issues/new?assignees=&labels=bug&title=bug%3A+">Report a Bug</a>
