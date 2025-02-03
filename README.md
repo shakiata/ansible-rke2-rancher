@@ -6,7 +6,7 @@
 </h1>
 
 <div align="center">
-  <b>ansible-rke2-rancher</b> - Setup a RKE2 Cluster with Rancher UI in minutes.
+  <b>ansible-rke2-rancher</b> - Setup a RKE2 Cluster with Rancher UI and letsencrypt in minutes.
   <br />
   <br />
   <a href="https://github.com/ansible-rke2-rancher/issues/new?assignees=&labels=bug&title=bug%3A+">Report a Bug</a>
@@ -31,8 +31,6 @@
 <br>
 
 ---
-
-**ANSIBLE-RKE2-RANCHER** Setup a RKE2 Cluster with Rancher UI in minutes.
 
 ## Repository Structure
 
@@ -65,6 +63,11 @@
 │   │       ├── values.yaml.j2
 │   │       └── certificate-wildcard-spaceterran-rancher.yaml.j2
 ```
+
+> **Note**  
+> Before setting up Rancher, you will need to create a DNS A record for the domain you want to use.  
+> Follow the instructions [here](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) to create the required DNS A record.
+
 
 ### Install Required Ansible Collections
 
