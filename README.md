@@ -56,6 +56,9 @@
 │   ├── helm_plugins/
 │   │   └── tasks/
 │   │       └── main.yml
+│   ├── cert_manager/
+│   │   ├── tasks/
+│   │       └── main.yml
 │   ├── rancher/
 │   │   ├── tasks/
 │   │       └── main.yml
