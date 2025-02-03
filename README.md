@@ -65,8 +65,9 @@
 ```
 
 > **Note**  
-> Before setting up Rancher, you will need to create a DNS A record for the domain you want to use.  
+> :yellow_circle: **Before setting up Rancher, you will need to create a DNS A record for the domain you want to use.**  
 > Follow the instructions [here](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) to create the required DNS A record.
+
 
 
 ### Install Required Ansible Collections
