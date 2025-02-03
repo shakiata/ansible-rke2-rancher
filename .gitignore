@@ -1,2 +1,1 @@
-rancher-manager-ui
-secrets.yaml
+inventory/group_vars/my-all.yml
