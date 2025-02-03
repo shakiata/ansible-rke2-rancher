@@ -49,3 +49,24 @@
           class: "nginx"
   environment:
     KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
+  when: self_signed_cert == false
+
+- name: Deploy Rancher chart inside cattle-system namespace
+  kubernetes.core.helm:
+    name: rancher
+    chart_ref: "{{ rancher_chart_ref }}"
+    chart_version: "{{ rancher_chart_version }}"
+    release_namespace: cattle-system
+    create_namespace: true
+    update_repo_cache: true
+    state: present
+    wait: true
+    values:
+      hostname: "{{ hostname }}"
+      bootstrapPassword: "{{ bootstrap_password }}"
+      ingress:
+        tls:
+          source: "none"
+  environment:
+    KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
+  when: self_signed_cert == true

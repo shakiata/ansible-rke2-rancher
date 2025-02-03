@@ -90,27 +90,31 @@ Update your `hosts.ini` file with the target servers and any required variables:
 **inventory/hosts.ini:**
 
 ```ini
-[rke2_server_agents]
-server_agent_1 ansible_host=192.168.0.26
-server_agent_2 ansible_host=192.168.0.29
-server_agent_3 ansible_host=192.168.0.24
+---
+# Ansible Common Variables
+home_path: /home/adminuser
+ssh_user: adminuser
+ansible_sudo_pass: adminpass
+ssh_cert: ~/.ssh/id_ed25519
+ssh_port: "22"
+TZ: America/Toronto
 
-[rke2_worker_agents]
-worker_agent_1 ansible_host=192.168.0.27
+# Kubernetes
+kubectl_config: "/etc/rancher/rke2/rke2.yaml"
+helm_version: v3.15.1 # https://github.com/helm/helm/releases
 
-[rke2_server_agents:vars]
-ansible_user={{ssh_user}} 
-ansible_port={{ssh_port}}
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-ansible_ssh_private_key_file={{ssh_cert}}
-ansible_become=true
+# cert-manager
+cert_manager_chart_ref: jetstack/cert-manager
+cert_manager_chart_version: v1.15.0 # https://github.com/cert-manager/cert-manager/releases
+cert_manager_email: "your-email@gmail.com"
 
-[rke2_worker_agents:vars]
-ansible_user={{ssh_user}}
-ansible_port={{ssh_port}}
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-ansible_ssh_private_key_file={{ssh_cert}}
-ansible_become=true
+# Rancher
+rancher_chart_ref: rancher-stable/rancher
+rancher_chart_version: v2.10.2 # https://github.com/rancher/rancher/releases
+rancher_path: "{{ home_path }}/rancher"
+hostname: "hostname@domain.com"
+bootstrap_password: "your-bootstrap-password"
+self_signed_cert: false # Change to true to use self signed certificate *NOTE: Still requires a DNS record, localy.
 
 ```
 
