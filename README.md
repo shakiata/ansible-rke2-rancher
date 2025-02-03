@@ -157,3 +157,10 @@ To execute the playbook, run:
 
 ```bash
 ansible-playbook -i inventory/hosts.ini playbook.yml
+```
+
+or
+
+```bash
+./runner.sh
+```
