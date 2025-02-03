@@ -16,4 +16,5 @@
   roles:
     - helm
     - helm_plugins
+    - cert_manager
     - rancher

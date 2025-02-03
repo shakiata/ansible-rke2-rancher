@@ -38,10 +38,14 @@
     state: present
     wait: true
     values:
+      hostname: "{{ hostname }}"
+      bootstrapPassword: "{{ bootstrap_password }}"
       ingress:
         tls:
-          source: "none"
-      bootstrapPassword: admin
-      hostname: "{{ hostname }}"  # Set the Rancher hostname
+          source: "letsEncrypt"
+      letsEncrypt:
+        email: "{{ cert_manager_email }}"
+        ingress:
+          class: "nginx"
   environment:
     KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
