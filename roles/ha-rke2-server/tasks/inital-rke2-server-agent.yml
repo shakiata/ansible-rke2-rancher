@@ -1,25 +1,8 @@
 ---
-- name: Retrieve node token from first master
-  delegate_to: server_agent_1
-  shell: cat /var/lib/rancher/rke2/server/node-token
-  register: node_token
-
 - name: Download and install RKE2
   shell: curl -sfL https://get.rke2.io | sh -
-
-- name: Create RKE2 configuration directory
-  file:
-    path: /etc/rancher/rke2/
-    state: directory
-    mode: '0755'
-
-- name: Configure RKE2 HA master node
-  copy:
-    dest: /etc/rancher/rke2/config.yaml
-    content: |
-      server: https://{{ server_agent_1 }}:9345
-      token: {{ node_token.stdout }}
-    mode: '0644'
+  when: inventory_hostname == 'server_agent_1'
+  tags: [rke2_server_agents]
 
 - name: Attempt to enable and start RKE2 server service and reboot on failure (RESUE)
   block:
@@ -37,12 +20,10 @@
         pre_reboot_delay: 5
         post_reboot_delay: 15
         test_command: whoami
-
     - name: Wait for node to be back online after reboot
       wait_for_connection:
         delay: 10
         timeout: 300
-
     - name: Retry enabling and starting RKE2 server service with timeout after reboot
       systemd:
         name: rke2-server
@@ -51,3 +32,21 @@
       async: 60
       poll: 60
       ignore_errors: yes
+  when: inventory_hostname == 'server_agent_1'
+  tags: [rke2_server_agents]
+
+- name: Wait for RKE2 config file to be available
+  wait_for:
+    path: /etc/rancher/rke2/rke2.yaml
+    timeout: 60
+  when: inventory_hostname == 'server_agent_1'
+  tags: [rke2_server_agents]
+
+- name: Set read permissions for adminuser on RKE2 config file
+  file:
+    path: /etc/rancher/rke2/rke2.yaml
+    owner: root
+    group: '{{ssh_user}}'
+    mode: '0640'
+  when: inventory_hostname == 'server_agent_1'
+  tags: [rke2_server_agents]

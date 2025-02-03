@@ -1,0 +1,61 @@
+---
+- name: Retrieve node token from first master
+  delegate_to: server_agent_1
+  shell: cat /var/lib/rancher/rke2/server/node-token
+  register: node_token
+  tags: [rke2_worker_agents]
+  when: "'rke2_worker_agents' in group_names"
+
+- name: Create RKE2 configuration directory
+  file:
+    path: /etc/rancher/rke2/
+    state: directory
+    mode: '0755'
+  tags: [rke2_worker_agents]
+  when: "'rke2_worker_agents' in group_names"
+
+- name: Download and install RKE2 agent (Workers)
+  shell: curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
+  tags: [rke2_worker_agents]
+  when: "'rke2_worker_agents' in group_names"
+
+- name: Configure RKE2 worker node
+  copy:
+    dest: /etc/rancher/rke2/config.yaml
+    content: |
+      server: https://{{ server_agent_1 }}:9345
+      token: {{ node_token.stdout }}
+    mode: '0644'
+  tags: [rke2_worker_agents]
+  when: "'rke2_worker_agents' in group_names"
+
+- name: Attempt to enable and start RKE2 server service and reboot on failure (RESUE)
+  block:
+    - name: Enable and start RKE2 server service with timeout
+      systemd:
+        name: rke2-server
+        enabled: yes
+        state: started
+      async: 60
+      poll: 60
+  rescue:
+    - name: Reboot the node because enabling RKE2 service failed
+      reboot:
+        reboot_timeout: 600
+        pre_reboot_delay: 5
+        post_reboot_delay: 15
+        test_command: whoami
+    - name: Wait for node to be back online after reboot
+      wait_for_connection:
+        delay: 10
+        timeout: 300
+    - name: Retry enabling and starting RKE2 server service with timeout after reboot
+      systemd:
+        name: rke2-server
+        enabled: yes
+        state: started
+      async: 60
+      poll: 60
+      ignore_errors: yes
+  when: "'rke2_worker_agents' in group_names"
+  tags: [rke2_worker_agents]

@@ -1,0 +1,22 @@
+---
+# Ansible Common Variables
+home_path: /home/adminuser
+ssh_user: adminuser
+ansible_sudo_pass: adminpass
+ssh_cert: ~/.ssh/id_ed25519
+ssh_port: "22"
+server_agent_1: "192.168.0.26"
+server_agent_2: "192.168.0.29"
+server_agent_3: "192.168.0.24"
+worker_agent_1: "192.168.0.27"
+TZ: America/Toronto
+
+# Kubernetes
+kubectl_config: "/etc/rancher/rke2/rke2.yaml"
+helm_version: v3.15.1 # https://github.com/helm/helm/releases
+
+# Rancher
+rancher_chart_ref: rancher-stable/rancher
+rancher_chart_version: v2.10.2 # https://github.com/rancher/rancher/releases
+rancher_path: "{{ home_path }}/rancher"
+hostname: "rancher-dev.branconet.lan"

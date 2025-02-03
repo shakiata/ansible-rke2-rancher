@@ -6,3 +6,4 @@
     /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/worker=true
     /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/master=true
   tags: [roles]
+  when: "'rke2_server_agents' in group_names"
