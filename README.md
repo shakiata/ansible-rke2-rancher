@@ -70,9 +70,6 @@
 │   ├── rancher/
 │   │   ├── tasks/
 │   │       └── main.yml
-│   │   └── templates/
-│   │       ├── values.yaml.j2
-│   │       └── certificate-wildcard-spaceterran-rancher.yaml.j2
 ```
 
 > **Note**  
@@ -150,7 +147,6 @@ cert_manager_email: "your-email@gmail.com"
 # Rancher
 rancher_chart_ref: rancher-stable/rancher
 rancher_chart_version: v2.10.2 # https://github.com/rancher/rancher/releases
-rancher_path: "{{ home_path }}/rancher"
 hostname: "hostname@domain.com"
 bootstrap_password: "your-bootstrap-password"
 self_signed_cert: false # Change to true to use self signed certificate *NOTE: Still requires a DNS record, localy.

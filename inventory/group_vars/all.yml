@@ -1,6 +1,5 @@
 ---
 # Ansible Common Variables
-home_path: /home/adminuser
 ssh_user: adminuser
 ansible_sudo_pass: adminpass
 ssh_cert: ~/.ssh/id_ed25519
@@ -19,7 +18,6 @@ cert_manager_email: "your-email@gmail.com"
 # Rancher
 rancher_chart_ref: rancher-stable/rancher
 rancher_chart_version: v2.10.2 # https://github.com/rancher/rancher/releases
-rancher_path: "{{ home_path }}/rancher"
 hostname: "hostname@domain.com"
 bootstrap_password: "your-bootstrap-password"
 self_signed_cert: false # Change to true to use self signed certificate *NOTE: Still requires a DNS record, localy.
