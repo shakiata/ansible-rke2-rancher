@@ -1,6 +1,17 @@
 ---
 # Rancher tasks
 
+- name: Check if kubectl can reach the cluster before proceeding
+  shell: |
+    export KUBECONFIG={{ kubectl_config }}
+    /var/lib/rancher/rke2/bin/kubectl get nodes
+  register: kubectl_status
+  failed_when: kubectl_status.rc != 0
+  changed_when: false
+  retries: 10
+  delay: 5
+  until: kubectl_status.rc == 0
+
 - name: Add Rancher Helm repository
   kubernetes.core.helm_repository:
     name: rancher-stable

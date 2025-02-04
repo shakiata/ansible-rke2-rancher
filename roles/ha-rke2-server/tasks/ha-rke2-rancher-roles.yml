@@ -1,3 +1,48 @@
+
+- name: Attempt to communicate with cluster and validate kubernetes nodes are up (RESUE)
+  block:
+    - name: Check if kubectl can reach the cluster before proceeding
+      shell: |
+        export KUBECONFIG={{ kubectl_config }}
+        /var/lib/rancher/rke2/bin/kubectl get nodes
+      register: kubectl_status
+      failed_when: kubectl_status.rc != 0
+      changed_when: false
+      retries: 10
+      delay: 5
+      until: kubectl_status.rc == 0
+  rescue:
+    - name: Reboot the node because kubectl could not be reached
+      reboot:
+        reboot_timeout: 600
+        pre_reboot_delay: 5
+        post_reboot_delay: 15
+        test_command: whoami
+    - name: Wait for node to be back online after reboot
+      wait_for_connection:
+        delay: 10
+        timeout: 300
+    - name: Retry enabling and starting RKE2 server service with timeout after reboot
+      systemd:
+        name: rke2-server
+        enabled: yes
+        state: started
+      async: 60
+      poll: 60
+      ignore_errors: yes
+    - name: Check if kubectl can reach the cluster before proceeding
+      shell: |
+        export KUBECONFIG={{ kubectl_config }}
+        /var/lib/rancher/rke2/bin/kubectl get nodes
+      register: kubectl_status
+      failed_when: kubectl_status.rc != 0
+      changed_when: false
+      retries: 50
+      delay: 5
+      until: kubectl_status.rc == 0
+  when: "'rke2_server_agents' in group_names and inventory_hostname != 'server_agent_1'"
+  tags: [rke2_server_agents]
+
 - name: Promote all master nodes to all roles (etcd, control-plane, worker, master)
   shell: |
     export KUBECONFIG={{ kubectl_config }}

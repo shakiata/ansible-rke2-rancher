@@ -9,7 +9,7 @@ $CPUControlPlane = 4
 $CPUCluster = 4
 $VMPath = "D:\hyper-V\vm_drives" # Path to store VMs and VHDs
 $VHDSize = 50GB                 # Size of the virtual hard disk
-$UbuntuISOPath = "D:\ISO\rhel-8.10-x86_64-dvd.iso" # Path to Ubuntu Server ISO
+$UbuntuISOPath = "D:\ISO\ubuntu-24.04-live-server-amd64.iso" # Path to Ubuntu Server ISO
 
 # Ensure the VM path exists
 if (-not (Test-Path -Path $VMPath)) {
