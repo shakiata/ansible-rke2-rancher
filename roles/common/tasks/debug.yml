@@ -6,14 +6,14 @@
   debug: 
       msg: '{{ansible_architecture}}'
 
-- name: Gather Ubuntu version
+- name: Gather OS version
   command: lsb_release -rs
-  register: ubuntu_version
+  register: OS_VERSION
 
 - name: Ensure Ubuntu version is a float
   set_fact:
-    ubuntu_version_number: "{{ ubuntu_version.stdout | float }}"
+    OS_VERSION_NUMBER: "{{ OS_VERSION.stdout | float }}"
 
-- name: Debug Ubuntu version number
+- name: Debug OS version number
   debug:
-    msg: "The Ubuntu version number is {{ ubuntu_version_number }}"
+    msg: "The OS version number is {{ OS_VERSION_NUMBER }}"
