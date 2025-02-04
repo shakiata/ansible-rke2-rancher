@@ -36,8 +36,8 @@
         name: rke2-server
         enabled: yes
         state: started
-      async: 60
-      poll: 60
+      async: 120
+      poll: 120
   rescue:
     - name: Reboot the node because enabling RKE2 service failed
       reboot:
@@ -54,8 +54,8 @@
         name: rke2-server
         enabled: yes
         state: started
-      async: 60
-      poll: 60
+      async: 120
+      poll: 120
       ignore_errors: yes
   when: "'rke2_server_agents' in group_names and inventory_hostname != 'server_agent_1'"
   tags: [rke2_server_agents]
