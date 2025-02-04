@@ -138,6 +138,7 @@ TZ: America/Toronto
 # Kubernetes
 kubectl_config: "/etc/rancher/rke2/rke2.yaml"
 helm_version: v3.15.1 # https://github.com/helm/helm/releases
+kubectl_binary: "/var/lib/rancher/rke2/bin/kubectl"
 
 # cert-manager
 cert_manager_chart_ref: jetstack/cert-manager
@@ -150,6 +151,12 @@ rancher_chart_version: v2.10.2 # https://github.com/rancher/rancher/releases
 hostname: "hostname@domain.com"
 bootstrap_password: "your-bootstrap-password"
 self_signed_cert: false # Change to true to use self signed certificate *NOTE: Still requires a DNS record, localy.
+node_labels: # pass in your own node labels in JSON format, default node-role labels set bellow will make nodes ALL roles (etcd, control-plane, worker, master)
+    - node-role.kubernetes.io/control-plane=true
+    - node-role.kubernetes.io/worker=true
+    - node-role.kubernetes.io/master=true
+    - node-role.kubernetes.io/etcd=true
+    - management.cattle.io/cluster-name=fleet-local # allows local cluster to be schedule workloads from fleet-agent
 ```
 
 ### Running the Playbook

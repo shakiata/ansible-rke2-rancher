@@ -4,7 +4,7 @@
     - name: Check if kubectl can reach the cluster before proceeding
       shell: |
         export KUBECONFIG={{ kubectl_config }}
-        /var/lib/rancher/rke2/bin/kubectl get nodes
+        {{kubectl_binary}} get nodes
       register: kubectl_status
       failed_when: kubectl_status.rc != 0
       changed_when: false
@@ -33,7 +33,7 @@
     - name: Check if kubectl can reach the cluster before proceeding
       shell: |
         export KUBECONFIG={{ kubectl_config }}
-        /var/lib/rancher/rke2/bin/kubectl get nodes
+        {{kubectl_binary}} get nodes
       register: kubectl_status
       failed_when: kubectl_status.rc != 0
       changed_when: false
@@ -46,9 +46,13 @@
 - name: Promote all master nodes to all roles (etcd, control-plane, worker, master)
   shell: |
     export KUBECONFIG={{ kubectl_config }}
-    /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/etcd=true
-    /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/control-plane=true
-    /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/worker=true
-    /var/lib/rancher/rke2/bin/kubectl label node {{ ansible_hostname }} node-role.kubernetes.io/master=true
+    {{kubectl_binary}} label node {{ ansible_hostname }} {{ item }}
+  loop: "{{node_labels}}"
   tags: [roles]
   when: "'rke2_server_agents' in group_names"
+  register: result
+  retries: 10
+  delay: 5
+  until: result.rc == 0
+
+

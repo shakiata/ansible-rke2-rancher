@@ -4,7 +4,7 @@
 - name: Check if kubectl can reach the cluster before proceeding
   shell: |
     export KUBECONFIG={{ kubectl_config }}
-    /var/lib/rancher/rke2/bin/kubectl get nodes
+    {{kubectl_binary}} get nodes
   register: kubectl_status
   failed_when: kubectl_status.rc != 0
   changed_when: false
@@ -61,6 +61,11 @@
   environment:
     KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
   when: self_signed_cert == false
+  register: result
+  retries: 10
+  delay: 30  # Wait 30 seconds before retrying
+  until: result is succeeded
+  
 
 - name: Deploy Rancher chart inside cattle-system namespace
   kubernetes.core.helm:
@@ -81,3 +86,18 @@
   environment:
     KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
   when: self_signed_cert == true
+  register: result
+  retries: 10
+  delay: 30  # Wait 30 seconds before retrying
+  until: result is succeeded
+
+- name: Set agent-tls-mode to system-store
+  shell: |
+    export KUBECONFIG={{ kubectl_config }}
+    {{kubectl_binary}} patch settings.management.cattle.io agent-tls-mode --type='merge' -p '{"value":"system-store"}'
+  tags: [roles]
+  when: "'rke2_server_agents' in group_names"
+  register: result
+  retries: 10
+  delay: 5
+  until: result.rc == 0

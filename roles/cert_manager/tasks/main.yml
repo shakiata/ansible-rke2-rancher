@@ -4,7 +4,7 @@
 - name: Check if kubectl can reach the cluster before proceeding
   shell: |
     export KUBECONFIG={{ kubectl_config }}
-    /var/lib/rancher/rke2/bin/kubectl get nodes
+    {{ kubectl_binary }} get nodes
   register: kubectl_status
   failed_when: kubectl_status.rc != 0
   changed_when: false
