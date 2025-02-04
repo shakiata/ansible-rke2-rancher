@@ -30,7 +30,15 @@
 </details>
 <br>
 
----
+
+
+# System Requirements
+
+### OS Support
+- Works and tested on ubuntu versions 22.04 and up.
+### Ansible Version Requirement
+- Deployment environment must have Ansible 2.9.0+
+
 
 ## Repository Structure
 
