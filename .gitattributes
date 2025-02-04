@@ -1,0 +1,10 @@
+# Mark everything as vendored (ignored by Linguist)
+* linguist-vendored
+
+# Unmark YAML files so they count towards the language statistics
+*.yaml linguist-vendored=false
+*.yml linguist-vendored=false
+
+# If you have Ansible playbooks in other formats, include them too
+*.ansible linguist-vendored=false
+*.j2 linguist-vendored=false  # Jinja2 templates (often used in Ansible)
