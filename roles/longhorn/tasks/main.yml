@@ -1,0 +1,31 @@
+- name: Add Longhorn Helm repository
+  kubernetes.core.helm_repository:
+    name: longhorn
+    repo_url: https://charts.longhorn.io
+    state: present
+
+- name: Update Helm repositories
+  kubernetes.core.helm_repository:
+    name: longhorn
+    repo_url: https://charts.longhorn.io
+    state: present
+  environment:
+    KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
+
+- name: Deploy Longhorn chart inside longhorn-system namespace
+  kubernetes.core.helm:
+    name: longhorn
+    chart_ref: longhorn/longhorn
+    release_namespace: longhorn-system
+    create_namespace: true
+    state: present
+    wait: true
+    values:
+      persistence:
+        defaultClass: true
+  environment:
+    KUBECONFIG: "{{ kubectl_config }}"  # Use the kubectl config environment variable
+  register: result
+  retries: 10
+  delay: 30  # Wait 30 seconds before retrying
+  until: result is succeeded

@@ -1,6 +1,6 @@
 ---
 # Main playbook to set up and install Helm, Cert-Manager, Traefik, and Rancher
-# line 4-11 commented out temp if deploying from scratch remove comment
+
 # - name: Setup RKE2 Management Cluster Server
 #   hosts:
 #    - rke2_server_agents
@@ -17,4 +17,6 @@
     - helm
     - helm_plugins
     - cert_manager
+    - smb_driver
+    - longhorn
     - rancher
