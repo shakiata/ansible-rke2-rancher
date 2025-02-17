@@ -1,6 +1,5 @@
 ---
-
-- import_tasks: inital-rke2-server-agent.yml
+# - import_tasks: inital-rke2-server-agent.yml
 - import_tasks: ha-rke2-server-agents.yml
-- import_tasks: ha-rke2-worker-agents.yml
+# - import_tasks: ha-rke2-worker-agents.yml
 - import_tasks: ha-rke2-rancher-roles.yml
